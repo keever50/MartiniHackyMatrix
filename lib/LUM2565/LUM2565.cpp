@@ -16,8 +16,8 @@ void LUM2565::init()
     pinMode(_LUM2565_ENB_PIN, OUTPUT);
     pinMode(_LUM2565_RD_PIN, INPUT);
 
-    analogWriteFreq(10000);
-    analogWrite(_LUM2565_ENB_PIN, 20);
+    analogWriteFreq(60000);
+    analogWrite(_LUM2565_ENB_PIN, 10);
     
 
     digitalWrite(_LUM2565_SE_PIN, LOW);
