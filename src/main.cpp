@@ -13,14 +13,16 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   LUM.setCursor(0,0);
-  LUM.drawLine(0,0,127,15, 1);
-  LUM.drawLine(0,0,127,0, 1);
-  LUM.drawLine(0,0,0,15, 1);
+  LUM.fillScreen(0);
 
-  LUM.println("TEST123");
-  LUM.println("BOTTOM TEXT");
-
+  
+  LUM.print((int)(millis()/60000)%60);
+  LUM.print(":");
+  LUM.print((int)(millis()/1000)%60);
+  LUM.print(":");
+  LUM.print((millis()%1000));
+  
   Serial.println("TEST");
   LUM.show();
-  delay(1000);
+  delay(1);
 }

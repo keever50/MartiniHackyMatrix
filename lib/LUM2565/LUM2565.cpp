@@ -46,10 +46,12 @@ void LUM2565::drawPixel(int16_t x, int16_t y, uint16_t color)
     if(row>15){row=15;}
 
     uint16_t line = buffer[line_select][row];
-    bool bit = 1; //(color>100);
 
-    if(bit){
+    if(color>0){
         line = line | 1 << bit_select;
+    }else
+    {
+        line = line &~( 1 << bit_select );    
     }
     
     buffer[line_select][row] = line;
