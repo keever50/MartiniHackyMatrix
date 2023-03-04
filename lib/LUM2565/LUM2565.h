@@ -24,6 +24,7 @@ public:
 
     void init();
     void drawPixel(int16_t x, int16_t y, uint16_t color);
+    void drawPixelF(int16_t x, int16_t y, uint16_t color);
     void show();
 
     uint16_t buffer[16][16];

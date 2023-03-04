@@ -16,7 +16,10 @@ void LUM2565::init()
     pinMode(_LUM2565_ENB_PIN, OUTPUT);
     pinMode(_LUM2565_RD_PIN, INPUT);
 
-    digitalWrite(_LUM2565_ENB_PIN, HIGH);
+    analogWriteFreq(10000);
+    analogWrite(_LUM2565_ENB_PIN, 20);
+    
+
     digitalWrite(_LUM2565_SE_PIN, LOW);
 
     //addresses
@@ -74,6 +77,27 @@ void LUM2565::drawPixel(int16_t x, int16_t y, uint16_t color)
     buffer[8+line_select][row] = line2;    
 }
 
+void LUM2565::drawPixelF(int16_t x, int16_t y, uint16_t color)
+{
+
+
+    int line_select = (255-x)/16;
+    if(line_select<0){line_select=0;}
+    if(line_select>15){line_select=15;}
+
+    int bit_select = (x%16);
+    int row = 15-y;
+    if(row<0){row=0;}
+    if(row>15){row=15;}
+
+    uint16_t line1 = buffer[line_select][row];
+    if(color == 0){line1 = line1 &~( 1 << bit_select ); }
+    
+    if(color == 1){line1 = line1 | ( 1 << bit_select ); }  
+
+    buffer[line_select][row] = line1;
+}
+
 void LUM2565::_set_address( int addr )
 {
     digitalWrite(_LUM2565_A0_PIN, addr & 0b0001);
@@ -81,10 +105,6 @@ void LUM2565::_set_address( int addr )
     digitalWrite(_LUM2565_A2_PIN, addr & 0b0100);
     digitalWrite(_LUM2565_A3_PIN, addr & 0b1000);
 
-    Serial.print((bool)(addr & 0b0001));
-    Serial.print((bool)(addr & 0b0010));
-    Serial.print((bool)(addr & 0b0100));
-    Serial.println((bool)(addr & 0b1000));
 
 }
 
@@ -99,20 +119,17 @@ void LUM2565::_write()
 
 void LUM2565::show()
 {
-    SPI.beginTransaction(SPISettings(7000000, MSBFIRST, SPI_MODE0));
+    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
     for(int y=0; y<16; y++)
     {
         //select address
         _set_address(y);
 
-        for(int x=0; x<8; x++)
+        for(int x=0; x<16; x++)
         {
             SPI.transfer16(buffer[x][y]);
         }
-        for(int x=0; x<8; x++)
-        {
-            SPI.transfer16(buffer[8+x][y]);
-        }
+
         _write();
     }
     _set_address(0);
