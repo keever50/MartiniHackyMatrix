@@ -14,6 +14,7 @@ void LUM2565::init()
     pinMode(_LUM2565_SE_PIN, OUTPUT);
     pinMode(_LUM2565_AB_PIN, OUTPUT);    
     pinMode(_LUM2565_ENB_PIN, OUTPUT);
+    pinMode(_LUM2565_RD_PIN, INPUT);
 
     digitalWrite(_LUM2565_ENB_PIN, HIGH);
     digitalWrite(_LUM2565_SE_PIN, LOW);
@@ -40,21 +41,37 @@ void LUM2565::drawPixel(int16_t x, int16_t y, uint16_t color)
     if(line_select<0){line_select=0;}
     if(line_select>7){line_select=7;}
 
-    int bit_select = x%16;
+    int bit_select = (x%16);
     int row = 15-y;
     if(row<0){row=0;}
     if(row>15){row=15;}
 
-    uint16_t line = buffer[line_select][row];
+    uint16_t line1 = buffer[line_select][row];
+    uint16_t line2 = buffer[8+line_select][row];   
 
-    if(color>0){
-        line = line | 1 << bit_select;
-    }else
-    {
-        line = line &~( 1 << bit_select );    
+    if(color==0){
+
+        line1 = line1 &~( 1 << bit_select );  
+        line2 = line2 &~( 1 << bit_select );  
     }
-    
-    buffer[line_select][row] = line;
+    if(color==1)
+    {
+        line1 = line1 | ( 1 << bit_select );  
+        line2 = line2 &~( 1 << bit_select );  
+    }
+    if(color==2)
+    {
+        line1 = line1 &~( 1 << bit_select );  
+        line2 = line2 | ( 1 << bit_select );  
+    }
+    if(color==3)
+    {
+        line1 = line1 | ( 1 << bit_select );  
+        line2 = line2 | ( 1 << bit_select );  
+    }    
+
+    buffer[line_select][row] = line1;
+    buffer[8+line_select][row] = line2;    
 }
 
 void LUM2565::_set_address( int addr )
@@ -82,7 +99,7 @@ void LUM2565::_write()
 
 void LUM2565::show()
 {
-    SPI.beginTransaction(SPISettings(14000000, MSBFIRST, SPI_MODE0));
+    SPI.beginTransaction(SPISettings(7000000, MSBFIRST, SPI_MODE0));
     for(int y=0; y<16; y++)
     {
         //select address
@@ -92,7 +109,10 @@ void LUM2565::show()
         {
             SPI.transfer16(buffer[x][y]);
         }
-
+        for(int x=0; x<8; x++)
+        {
+            SPI.transfer16(buffer[8+x][y]);
+        }
         _write();
     }
     _set_address(0);

@@ -26,7 +26,7 @@ public:
     void drawPixel(int16_t x, int16_t y, uint16_t color);
     void show();
 
-    uint16_t buffer[8][16];
+    uint16_t buffer[16][16];
 
 private:
     void _set_address(int addr );
