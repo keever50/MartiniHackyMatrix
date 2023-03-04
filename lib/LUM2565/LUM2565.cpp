@@ -26,20 +26,30 @@ void LUM2565::init()
 
     SPI.setTX(_LUM2565_GR_PIN);
     SPI.setSCK(_LUM2565_CLK_PIN);
+    
     SPI.begin();
+    
 
 }
 
 void LUM2565::drawPixel(int16_t x, int16_t y, uint16_t color)
 {
-    int line_select = x/16;
+
+
+    int line_select = (127-x)/16;
+    if(line_select<0){line_select=0;}
+    if(line_select>7){line_select=7;}
+
     int bit_select = x%16;
-    int row = y;
+    int row = 15-y;
+    if(row<0){row=0;}
+    if(row>15){row=15;}
+
     uint16_t line = buffer[line_select][row];
     bool bit = 1; //(color>100);
 
     if(bit){
-        line = line | 1 << 15-bit_select;
+        line = line | 1 << bit_select;
     }
     
     buffer[line_select][row] = line;
@@ -61,16 +71,16 @@ void LUM2565::_set_address( int addr )
 
 void LUM2565::_write()
 {
-    delay(10);
     digitalWrite(_LUM2565_AE_PIN, HIGH);
     digitalWrite(_LUM2565_WE_PIN, HIGH);
-    delay(10);
+    //Write//
     digitalWrite(_LUM2565_WE_PIN, LOW);
     digitalWrite(_LUM2565_AE_PIN, LOW);
 }
 
 void LUM2565::show()
 {
+    SPI.beginTransaction(SPISettings(14000000, MSBFIRST, SPI_MODE0));
     for(int y=0; y<16; y++)
     {
         //select address
@@ -84,4 +94,6 @@ void LUM2565::show()
         _write();
     }
     _set_address(0);
+
+    SPI.endTransaction();
 }
