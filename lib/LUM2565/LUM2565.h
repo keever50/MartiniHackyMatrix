@@ -1,3 +1,4 @@
+
 #ifndef _LUM2565_H_
 #define _LUM2565_H
 
@@ -23,15 +24,18 @@ public:
     LUM2565( int16_t w, int16_t h );
 
     void init();
+    void pwm_update();
     void drawPixel(int16_t x, int16_t y, uint16_t color);
     void drawPixelF(int16_t x, int16_t y, uint16_t color);
+    void drawPixelFD(int16_t x, int16_t y, uint16_t color, uint16_t color2, float mix, uint16_t dim);
     void show();
 
     uint16_t buffer[16][16];
-
+    int pwm_time;
 private:
     void _set_address(int addr );
     void _write();
+
 };
 
 #endif 
