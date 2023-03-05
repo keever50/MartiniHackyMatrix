@@ -18,7 +18,7 @@ void LUM2565::init()
     pinMode(_LUM2565_RD_PIN, INPUT);
 
     analogWriteFreq(60000);
-    analogWrite(_LUM2565_ENB_PIN, 10);
+    analogWrite(_LUM2565_ENB_PIN, 20);
     
 
     digitalWrite(_LUM2565_SE_PIN, LOW);
@@ -35,6 +35,15 @@ void LUM2565::init()
     SPI.begin();
     
 
+}
+
+void LUM2565::pwm_update()
+{
+    pwm_time = pwm_time + 1;
+    if(pwm_time > 7)
+    {
+        pwm_time = 0;
+    }
 }
 
 void LUM2565::drawPixel(int16_t x, int16_t y, uint16_t color)
@@ -99,6 +108,28 @@ void LUM2565::drawPixelF(int16_t x, int16_t y, uint16_t color)
     buffer[line_select][row] = line1;
 }
 
+void LUM2565::drawPixelFD( int16_t x, int16_t y, uint16_t color, uint16_t color2, float mix, uint16_t dim )
+{
+    int c = 0;
+    if(pwm_time > dim)
+    {
+        c=0;
+    }else
+    {
+        if(pwm_time > ((float)dim*mix))
+        {
+            c=1;
+        }else
+        {
+            c=2;    
+        }
+             
+    }
+
+    drawPixel(x,y,c);
+    
+}
+
 void LUM2565::_set_address( int addr )
 {
     digitalWrite(_LUM2565_A0_PIN, addr & 0b0001);
@@ -120,7 +151,7 @@ void LUM2565::_write()
 
 void LUM2565::show()
 {
-    SPI.beginTransaction(SPISettings(4000000, MSBFIRST, SPI_MODE0));
+    SPI.beginTransaction(SPISettings(5500000, MSBFIRST, SPI_MODE0));
     for(int y=0; y<16; y++)
     {
         //select address
