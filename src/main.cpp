@@ -5,6 +5,7 @@
 #include <SDS011_PWM.h>
 #include <TimeLib.h>
 #include <DHT.h>
+#include <string.h>
 
 #define DISP_CLOCK_WIDTH   48
 #define DISP_CO2_WIDTH     4*6
@@ -84,6 +85,8 @@ void drawVerticalMeterBar( int x, int y, int length, int thickness, int n, float
 void setup() {
   // put your setup code here, to run once:
 
+  //setTime(1678124432+3600);
+
   Serial.begin(115200);
   LUM.init();
   DHT_sensor.begin();
@@ -93,6 +96,7 @@ int CO2_value = 0;
 int PM25_value = 0;
 int temp_value = 0;
 int humid_value = 0;
+double time_adjust = 0;
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -104,11 +108,11 @@ void loop() {
   //TIME
   LUM.setCursor(0,0);
   LUM.setTextColor(1);
-  printTimeDigit((int)(millis()/3600000)%60);  
+  printTimeDigit(hour());  
   LUM.print(":");  
-  printTimeDigit((int)(millis()/60000)%60);
+  printTimeDigit(minute());
   LUM.print(":");
-  printTimeDigit((int)(millis()/1000)%60);
+  printTimeDigit(second());
 
   //CO2
   LUM.setCursor(DISP_CLOCK_WIDTH+6,0);
@@ -146,6 +150,19 @@ void loop1()
   PM25_value = (int)PM25.read();
   temp_value = DHT_sensor.readTemperature();
   humid_value = DHT_sensor.readHumidity();
+
+  if(Serial.available())
+  {
+    Serial.setTimeout(100);
+    String command = Serial.readString();
+    if(command.startsWith("TIME"))
+    {
+      command.remove(0,4);
+      setTime(command.toDouble()+3600);
+    }
+  }
+  
+
 
   delay(1000);
 
