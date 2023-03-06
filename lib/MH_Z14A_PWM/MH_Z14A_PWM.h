@@ -5,7 +5,7 @@
 
 
 #define MH_Z14A_PWM_PIN    0
-#define MH_Z14A_PWM_INTERVAL    60
+#define MH_Z14A_PWM_INTERVAL    5
 
 class MH_Z14A_PWM
 {

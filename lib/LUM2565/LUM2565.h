@@ -18,6 +18,9 @@
 #define _LUM2565_A2_PIN     14
 #define _LUM2565_A3_PIN     15
 
+#define _LUM2565_PWM_RANGE  8
+
+
 class LUM2565 : public Adafruit_GFX
 {
 public:
@@ -28,6 +31,7 @@ public:
     void drawPixel(int16_t x, int16_t y, uint16_t color);
     void drawPixelF(int16_t x, int16_t y, uint16_t color);
     void drawPixelFD(int16_t x, int16_t y, uint16_t color, uint16_t color2, float mix, uint16_t dim);
+    void drawPixelMix( int16_t x, int16_t y, uint16_t color, uint16_t color2, float mix );
     void show();
 
     uint16_t buffer[16][16];

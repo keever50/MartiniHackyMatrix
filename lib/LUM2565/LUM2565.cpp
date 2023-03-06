@@ -40,9 +40,9 @@ void LUM2565::init()
 void LUM2565::pwm_update()
 {
     pwm_time = pwm_time + 1;
-    if(pwm_time > 7)
+    if(pwm_time > _LUM2565_PWM_RANGE)
     {
-        pwm_time = 0;
+        pwm_time = 1;
     }
 }
 
@@ -127,6 +127,22 @@ void LUM2565::drawPixelFD( int16_t x, int16_t y, uint16_t color, uint16_t color2
     }
 
     drawPixel(x,y,c);
+    
+}
+
+void LUM2565::drawPixelMix( int16_t x, int16_t y, uint16_t color, uint16_t color2, float mix )
+{
+    float t = (float)pwm_time / (_LUM2565_PWM_RANGE);
+    t = t * t;
+
+    if(t>mix)
+    {
+        drawPixel(x,y,color);
+    }
+    else
+    {
+        drawPixel(x,y,color2);
+    }
     
 }
 
