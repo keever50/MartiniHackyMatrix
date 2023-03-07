@@ -52,6 +52,8 @@ void print4Digit(int n )
     return;
   }
 
+  LUM.print(n);
+
 }
 
 

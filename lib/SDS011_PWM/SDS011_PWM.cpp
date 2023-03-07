@@ -35,7 +35,7 @@ float SDS011_PWM::read()
 
 
         //Calculate CO2 concentration 
-        _value = 999.0*(_TH-2.0)/(_TH+_TL-4.0);
+        _value = 999.0*(_TH)/(_TH+_TL);
 
         //Scedule next read
         _next_read = (millis()/1000) + SDS011_PWM_INTERVAL;
