@@ -1,14 +1,14 @@
 #include <MH_Z14A_PWM.h>
 #include <Arduino.h>
 
-MH_Z14A_PWM::MH_Z14A_PWM( int t )
+MH_Z14A_PWM::MH_Z14A_PWM( unsigned long t )
 {
     pinMode(MH_Z14A_PWM_PIN, INPUT);
 }
 
 
 //Blocking
-uint16_t MH_Z14A_PWM::read()
+unsigned long MH_Z14A_PWM::read()
 {
     if((millis()/1000) >= _next_read)
     {

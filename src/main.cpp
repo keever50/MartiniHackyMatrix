@@ -94,11 +94,11 @@ void setup() {
   DHT_sensor.begin();
 }
 
-int CO2_value = 0;
-int PM25_value = 0;
+unsigned long CO2_value = 0;
+unsigned long PM25_value = 0;
 int temp_value = 0;
 int humid_value = 0;
-double time_adjust = 0;
+unsigned long time_adjust = 0;
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -149,7 +149,7 @@ void loop() {
 void loop1()
 {
   CO2_value = CO2.read();
-  PM25_value = (int)PM25.read();
+  PM25_value = PM25.read();
   temp_value = DHT_sensor.readTemperature();
   humid_value = DHT_sensor.readHumidity();
 

@@ -10,14 +10,14 @@
 class MH_Z14A_PWM
 {
 public:
-    MH_Z14A_PWM( int t );
-    uint16_t read();
+    MH_Z14A_PWM( unsigned long t );
+    unsigned long read();
 
 private:
-    int _TH = 0;
-    int _TL = 0;
-    int _value = 0;
-    int _next_read = 0;
+    unsigned long  _TH = 0;
+    unsigned long  _TL = 0;
+    unsigned long  _value = 0;
+    unsigned long  _next_read = 0;
 };
 
 

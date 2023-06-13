@@ -9,7 +9,7 @@ SDS011_PWM::SDS011_PWM( int t )
 
 
 //Blocking
-float SDS011_PWM::read()
+unsigned long SDS011_PWM::read()
 {
     if((millis()/1000) >= _next_read)
     {
