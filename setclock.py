@@ -6,7 +6,7 @@ print("Enter port:")
 portstr = input()
 ser = serial.Serial(portstr, 115200)
 
-time = math.floor(datetime.datetime.now(datetime.timezone.utc).timestamp()+3600)
+time = math.floor(datetime.datetime.now(datetime.timezone.utc).timestamp())#+3600)
 print(time)
 ser.write(b"TIME")
 ser.write(str(time).encode())
